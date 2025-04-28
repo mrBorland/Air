@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 
-// Параметри
 const wallets = [
     "0xd9d1ecc1971a14108502596dc4f04ff919b3d02f"
 ];
@@ -21,58 +20,25 @@ const chains = [
     "bnbchain"
 ];
 
-const intervalSeconds = 600; // 10 хвилин
+const intervalSeconds = 600;
 
-// Функція для логування відсутніх гаманців
-function logWarning(message) {
-    const timestamp = new Date().toISOString().replace('T', ' ').split('.')[0];
-    const logMessage = `[${timestamp}] ${message}\n`;
+async function runTasks() {
+    const tasksFolder = path.join(__dirname, 'airdrop_tasks');
+    const tasks = fs.readdirSync(tasksFolder).filter(file => file.endsWith('.js'));
 
-    // Виводимо в консоль
-    console.warn(logMessage);
-
-    // Записуємо у файл
-    const logPath = path.join(__dirname, 'missing_wallets.txt');
-    fs.appendFileSync(logPath, logMessage, 'utf8');
-}
-
-// Імітація перевірки мереж (в майбутньому тут будуть реальні аірдропи)
-async function checkNetworks() {
-    const availableNetworks = [
-        "ethereum",
-        "arbitrum",
-        "zksync",
-        "starknet",
-        "blast",
-        "linea",
-        "optimism",
-        "base",
-        "mode",
-        "zetachain",
-        "polygon",
-        "bnbchain",
-        "aptos",    // приклад мережі, якої у нас немає
-        "solana"    // ще одна мережа без гаманця
-    ];
-
-    for (let network of availableNetworks) {
-        if (!chains.includes(network)) {
-            logWarning(`Немає гаманця для мережі ${network}. Рекомендовано створити!`);
-        } else {
-            console.log(`[INFO] Перевірка мережі ${network}: гаманець підтримується.`);
-        }
+    for (const task of tasks) {
+        console.log(`[TASK] Виконуємо: ${task}`);
+        require(path.join(tasksFolder, task));
     }
 }
 
-// Основний цикл роботи бота
 async function runBot() {
-    console.log("Airdrop Agent запущено! Готуємось фармити аірдропи...");
+    console.log('Airdrop Agent запущено!');
     while (true) {
-        await checkNetworks();
+        await runTasks();
         console.log(`[WAIT] Чекаємо ${intervalSeconds} секунд до наступної перевірки...\n`);
         await new Promise(resolve => setTimeout(resolve, intervalSeconds * 1000));
     }
 }
 
-// Старт
 runBot();
