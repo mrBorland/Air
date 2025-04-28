@@ -1,4 +1,20 @@
 {
-  "airdrops": [],
-  "wallet": "0x0000000000000000000000000000000000000000"
+  "wallets": [
+    "0xd9d1ecc1971a14108502596dc4f04ff919b3d02f"
+  ],
+  "chains": [
+    "ethereum",
+    "arbitrum",
+    "zksync",
+    "starknet",
+    "blast",
+    "linea",
+    "optimism",
+    "base",
+    "mode",
+    "zetachain",
+    "polygon",
+    "bnbchain"
+  ],
+  "intervalSeconds": 600
 }
